@@ -1,0 +1,31 @@
+from time import sleep
+import mysql.connector
+from datetime import datetime
+
+dbConnection = mysql.connector.connect(
+	host="54.254.127.82",
+	user="gps2020",
+	password="gps#2020#123",
+	database="pelacakan"
+)
+
+
+
+
+while True : 
+	try :
+
+		file = open("/home/pi/data.txt","r").read()
+	split = file.split(" | ")
+	time = datetime.now()
+	lat = split[2].replace(" Lat: " ,"")
+	long = split[3].replace(" Lon: ","")
+	
+	sql 	= "INSERT INTO gps_log (latitude,longitude,timestamp) values(%s,%s,%s)"
+	values 	= (lat,long,time)
+	cursor 	= dbConnection.cursor()
+	cursor.execute(sql,values)
+	dbConnection.commit()
+	cursor.close() 
+
+	sleep(1)
